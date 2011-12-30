@@ -1,9 +1,15 @@
-require 'Synth'
+require 'funcs'
 require 'Server'
+require 'Synth'
+require 'Buffer'
+require 'Group'
 
 s = Server:new()
 s:freeAll()
-s:nextNodeID()
+s:notify(1)
+nextNodeID()
+
+print("__________________", nodeIII)
 --s:dumpOSC(1)
 --s:sendMsg('/s_new', 'default', 3000, 1, 1, "freq", 999 )
 --s:sendMsg('/n_set', mysynth:getNodeID(), 'freq', 3*y)
@@ -11,8 +17,13 @@ s:nextNodeID()
 --n:speak()
 --
 ----s = Synth:new("default", {freq = 322, amp = 0.3}, 2, 22)
---
+
+mybuf = Buffer:new()
+mybuf:read("/Users/thor/Library/Application Support/SuperCollider/sounds/a11wlk01.wav")
+print("mybuf bufnum is:", mybuf.bufnum)
+
 mysynth = Synth:new("luaimpulse", { freq = 2 })
+mysynth2 = Synth:new("default", { freq = 88, amp=0.2 })
 --mysynth:free()
 
 reverb = Synth:new("luareverb", { freq = 2 })
@@ -25,6 +36,13 @@ delay:below(mysynth)
 --reverb:above(mysynth)
 --mysynth:above(reverb)
 
+groop = Group:new()
+groox = Group.new(groop)
+--groox:moveToHead(groop)
+--groop:moveToHead(groox)
+
+mysynth:moveToHead(groop)
+mysynth2:moveToHead(groop)
 
 
 local ctx = "OSC Template"
@@ -60,6 +78,13 @@ function win:key(e, key)
 		reverb:below(mouseSynth)
 		delay:below(mouseSynth)
 	elseif key == 103 then -- KEY G - for grains
+		s:status()
 		Synth:new("luagrain", {freq=math.random(5222), amp=0.05})
+	elseif key == 98 then -- KEY B - for buffer
+		Synth:new("luaplaybuf", {amp=0.9})
 	end
+end
+
+function win:close()
+	print("closing")
 end

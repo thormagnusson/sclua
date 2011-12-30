@@ -15,6 +15,18 @@ SynthDef(\luagrain, {arg out=0, freq=880, amp=1;
 Synth(\luaimpulse)
 
 
+
+SynthDef(\luaplaybuf, {arg out=0, bufnum=0, rate=1, amp=1;
+	var signal;
+	signal = PlayBuf.ar(1, bufnum, rate, doneAction:2) * amp;
+	Out.ar(out, Pan2.ar(signal, 0))
+}).store;
+
+Synth(\luaplaybuf)
+
+
+
+
 SynthDef(\luareverb, {arg in=0, out=0, mix = 0.83, room = 0.5, damp = 0.5;
 	var signal;
 	signal = In.ar(0, 2);
@@ -45,3 +57,4 @@ fork{
 		1.wait;
 	})
 }
+
