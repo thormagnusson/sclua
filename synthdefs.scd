@@ -58,3 +58,7 @@ fork{
 	})
 }
 
+
+s.plotTree // updated graph function in SC 3.5 - very nice
+
+

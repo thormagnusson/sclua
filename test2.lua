@@ -13,23 +13,25 @@ mybuf:read("/Users/thor/Library/Application Support/SuperCollider/sounds/a11wlk0
 
 impulse = Synth:new("luaimpulse", { freq = 2 })
 impulse2 = Synth:new("luaimpulse", { freq = 3 })
-default = Synth:new("default", { freq = 2 })
-reverb = Synth:new("luareverb", { freq = 2 })
-delay = Synth:new("luadelay", { delaytime = 0.4, decaytime = 3 })
+bufsynth = Synth:new("luaplaybuf", {amp=0.9})
 
-impulse:above(default)
-
--- try to comment out the lines below and add one by one in
--- perhaps running this line in SC-lang : s.dumpTree
-groop = Group:new()
-impulse:moveToHead(groop)
-impulse2:moveToHead(groop)
-delay:moveToTail(groop)
-
-groox = Group.new(groop)
-groox:below(groop)
-
-reverb:moveToTail(groox)
+--default = Synth:new("default", { freq = 2 })
+--reverb = Synth:new("luareverb", { freq = 2 })
+--delay = Synth:new("luadelay", { delaytime = 0.4, decaytime = 3 })
+--
+--impulse:above(default)
+--
+---- try to comment out the lines below and add one by one in
+---- perhaps running this line in SC-lang : s.dumpTree
+--groop = Group:new()
+--impulse:moveToHead(groop)
+--impulse2:moveToHead(groop)
+--delay:moveToTail(groop)
+--
+--groox = Group.new(groop)
+--groox:below(groop)
+--
+--reverb:moveToTail(groox)
 ---------------------------
 
 local ctx = "sclua test"
@@ -37,14 +39,12 @@ win = Window(ctx, 0, 0, 350, 150)
 
 function win:mouse(event, btn, x, y)
 	if ((event == "down") and (btn == "left"))then
-		mouseSynth = Synth:new("luaimpulse", {freq=2222, amp=.01})
-		mouseSynth:moveToHead(groox)
-		groox:above(groop)
+		impulse:run(0)
+		bufsynth:run(0)
 	elseif event == "drag" then
-		mouseSynth:set({freq = 3*y, amp= x/250})
 	elseif event == "up" then	
-		mouseSynth:free()
-		groox:below(groop)
+		impulse:run(1)
+		bufsynth:run(1)
 	end
 end
 

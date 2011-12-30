@@ -1,6 +1,7 @@
 Read Me
 
-- 
+Issues
+- two directional OSC ports required for server replying to lang
 
 
 

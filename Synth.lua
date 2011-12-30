@@ -17,15 +17,18 @@ function Synth:set(args)
 	s:sendMsg('/n_set', self.nodeID, unpack(args) )
 end
 
-function Synth:above(aSynth) -- TODO: Should I change this to aNode (can it be used for groups as well)?
+function Synth:setn(args)
+	local args = parseArgsX(args)
+	s:sendMsg('/n_set', self.nodeID, unpack(args) )
+end
+
+function Synth:above(aSynth)
 	s:sendMsg('/n_before', self.nodeID, aSynth.nodeID )
 end
 
 function Synth:below(aSynth)
 	s:sendMsg('/n_after', self.nodeID, aSynth.nodeID )
 end
-
--- experimental -- these are really group methods, but fit here
 
 function Synth:moveToHead(aNode)
 	s:sendMsg('/g_head', aNode.nodeID, self.nodeID )
@@ -35,17 +38,14 @@ function Synth:moveToTail(aNode)
 	s:sendMsg('/g_tail', aNode.nodeID, self.nodeID )
 end
 
-------------------
 function Synth:free()
 	s:sendMsg('/n_free', self.nodeID )
+end
+
+function Synth:run(arg)
+	s:sendMsg('/n_run', self.nodeID, arg)
 end
 
 function Synth:getNodeID()
 	return self.nodeID
 end
-
-
-function Synth:postArgs()
-	print("args:", unpack(self.args))
-end
-

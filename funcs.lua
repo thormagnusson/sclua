@@ -1,11 +1,11 @@
 -- Global Functions
 
 bufnum = -1
-nodeID = 1000
+nodeID = 999
 groupID = 1
 
 function parseArgsX(args)
-	print("parsing this:", args)
+--	print("parsing this:", args)
 	local a = {}
 	if args ~= nil then
 		for arg, val in pairs(args) do 
