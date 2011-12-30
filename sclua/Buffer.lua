@@ -19,8 +19,6 @@ function Buffer:alloc(numframes, numchannels)
 end
 
 function Buffer:read(path)
-	print("reading a BUFFER: ", path)
-	print("__________bufnum is: ", self.bufnum)
    s:sendMsg('/b_allocRead', self.bufnum, path) -- WORKS!
 end
 
