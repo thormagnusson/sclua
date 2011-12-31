@@ -1,8 +1,10 @@
-require 'funcs'
-require 'Server'
-require 'Synth'
-require 'Buffer'
-require 'Group'
+
+require 'sclua.funcs'
+require 'sclua.Server'
+require 'sclua.Synth'
+require 'sclua.Buffer'
+require 'sclua.Group'
+
 
 s = Server:new()
 s:freeAll() -- free all synths playing and clear up the server

@@ -3,6 +3,7 @@
 bufnum = -1
 nodeID = 999
 groupID = 1
+busIndex = 15
 
 function parseArgsX(args)
 --	print("parsing this:", args)
@@ -30,4 +31,9 @@ end
 function nextGroupID()
 	groupID = groupID + 1
 	return groupID
+end
+
+function nextBusIndex()
+	busIndex = busIndex + 1
+	return busIndex
 end

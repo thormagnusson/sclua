@@ -17,9 +17,10 @@ function Synth:set(args)
 	s:sendMsg('/n_set', self.nodeID, unpack(args) )
 end
 
-function Synth:setn(args)
-	local args = parseArgsX(args)
-	s:sendMsg('/n_set', self.nodeID, unpack(args) )
+-- unpacking not working here it seems
+function Synth:setn(controlNameNum, args)
+	local nn = parseArgsX(controlNameNum) -- no need to parse a table of indexed elements
+	s:sendMsg('/n_setn', self.nodeID, unpack(nn), unpack(args) )
 end
 
 function Synth:above(aSynth)
@@ -48,4 +49,21 @@ end
 
 function Synth:getNodeID()
 	return self.nodeID
+end
+
+function Synth:map(name, aBus)
+	s:sendMsg('/n_map', self.nodeID, name, aBus.busIndex )
+end
+
+-- REVIEW
+--function Synth:map(args)
+--	s:sendMsg('/n_map', self.nodeID, unpack(args) )
+--end
+
+function Synth:mapn(args) -- mapping from control bus
+	s:sendMsg('/n_mapn', self.nodeID, unpack(args) )
+end
+
+function Synth:mapa(args) -- mapping from control bus
+	s:sendMsg('/n_mapa', self.nodeID, unpack(args) )
 end

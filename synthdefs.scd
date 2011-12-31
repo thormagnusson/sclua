@@ -62,3 +62,41 @@ fork{
 s.plotTree // updated graph function in SC 3.5 - very nice
 
 
+
+
+
+
+
+
+
+
+b = Bus.control(s, 1); b.set(880);
+c = Bus.control(s, 1);	c.set(884);
+
+SynthDef("luasine", { arg out=0, freq=440, amp=0.5; 
+	Out.ar(out, Pan2.ar(SinOsc.ar(freq, 0, amp), 0));
+}).store;
+
+x.map(\freq1, b, \freq2, c);
+x.free; b.free; c.free;
+
+
+
+b = Bus.control(s, 1); 
+b.set(880);
+
+SynthDef("luasine", { arg out=0, freq=440, amp=0.5; 
+	Out.ar(out, Pan2.ar(SinOsc.ar(freq, 0, amp), 0));
+}).store;
+
+x = Synth("luasine")
+x.map(\freq, b);
+
+
+SynthDef(\lfo, {arg ctrlbus = 2, freq=4, amp=100;
+        Out.kr(ctrlbus, SinOsc.kr(freq, 0, mul: amp, add: 200)); // note the .kr
+}).store;
+
+SynthDef(\lfosaw, {arg ctrlbus = 2, freq=4, amp=100;
+        Out.kr(ctrlbus, LFSaw.kr(freq, 0, mul: amp, add: 200)); // note the .kr
+}).store;
