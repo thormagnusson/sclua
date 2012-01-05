@@ -1,4 +1,6 @@
-Synth = {}
+local funcs = require("sclua.funcs")
+
+local Synth = {}
 Synth.__index = Synth
 
 function Synth:new(name, args)
@@ -67,3 +69,5 @@ end
 function Synth:mapa(args) -- mapping from control bus
 	s:sendMsg('/n_mapa', self.nodeID, unpack(args) )
 end
+
+return Synth

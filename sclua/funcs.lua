@@ -18,7 +18,6 @@ end
 
 function nextBufNum()
 	bufnum = bufnum + 1
-	print("BUFNUM: Next available", bufnum)
 	return bufnum
 end
 

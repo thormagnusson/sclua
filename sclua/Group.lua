@@ -1,4 +1,6 @@
-Group = {}
+local funcs = require("sclua.funcs")
+
+local Group = {}
 Group.__index = Group
 
 function Group:new(aGroup)
@@ -50,3 +52,5 @@ function Group:queryTree(flag)
 	-- Replies to the sender with a /g_queryTree.reply message
 	s:sendMsg('/g_queryTree', self.nodeID, flag )
 end
+
+return Group

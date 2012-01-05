@@ -1,6 +1,7 @@
 local osc = require("osc")
+local funcs = require("sclua.funcs")
 
-Server = {}
+local Server = {}
 Server.__index = Server
 
 function Server:new(IP, port)
@@ -22,6 +23,10 @@ function Server:dumpOSC(mode)
 --	2 - print the contents in hexadecimal.
 --	3 - print both the parsed and hexadecimal representations of the contents.	
 	oscout:send('/dumpOSC', mode)
+end
+
+function Server:boot()
+	os.execute("/Applications/LuaAV.12.12.11/scsynth -u 57110 -b 1026 -R 0 &") 
 end
 
 function Server:freeAll()
@@ -55,3 +60,5 @@ end
 --		wait(1/40)
 --	end
 --end)
+
+return Server

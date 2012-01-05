@@ -1,8 +1,7 @@
-require 'sclua.funcs'
-require 'sclua.Server'
-require 'sclua.Synth'
-require 'sclua.Buffer'
-require 'sclua.Group'
+Server = require('sclua.Server')
+Buffer = require('sclua.Buffer')
+Group = require('sclua.Group')
+Synth = require('sclua.Synth')
 
 --[[
 This example shows:

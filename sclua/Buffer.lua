@@ -1,4 +1,6 @@
-Buffer = {}
+local funcs = require("sclua.funcs")
+
+local Buffer = {}
 Buffer.__index = Buffer
 
 function Buffer:new()
@@ -56,5 +58,5 @@ function Buffer:getn(index, numsamples)
 	s:sendMsg('/b_get', self.bufnum, index, numsamples)
 end
 
-
+return Buffer
 

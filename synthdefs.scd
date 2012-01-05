@@ -40,7 +40,7 @@ SynthDef(\luadelay, {arg in=0, out=0, maxdelaytime = 0.2, delaytime = 0.2, decay
 	Out.ar(out, AllpassC.ar(signal, maxdelaytime, delaytime, decaytime))
 }).store;
 
-Synth(\luadelay, addAction:\addToTail)
+// Synth(\luadelay, addAction:\addToTail)
 
 
 /*

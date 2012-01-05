@@ -1,4 +1,6 @@
-Bus = {}
+local funcs = require("sclua.funcs")
+
+local Bus = {}
 Bus.__index = Bus
 
 function Bus:new()
@@ -32,3 +34,5 @@ end
 function Bus:index()
 	return self.busIndex
 end
+
+return Bus
