@@ -1,11 +1,14 @@
---require('sclua.*')
-
 require 'sclua.funcs'
 require 'sclua.Server'
 require 'sclua.Synth'
 require 'sclua.Buffer'
 require 'sclua.Group'
 require 'sclua.Bus'
+
+--[[
+This example shows:
+	- creating and using control busses
+]]
 
 s = Server:new()
 s:freeAll() -- free all synths playing and clear up the server
@@ -44,20 +47,23 @@ function win:key(e, key)
 	print("KEY", key)
 	if e == "down" then	
 		if key == 100 then -- KEY D
-			bus:set(math.random(2000))
+			lfo:free() -- stop the lfo synth
+			bus:set(math.random(2000)) -- and set a static random frequency
 		elseif key == 103 then -- KEY G - for grains
-
-			Synth:new("luagrain", {freq=math.random(5222), amp=0.05}) -- no variable (synth frees itself)
+			lfo = Synth:new("lfo", { ctrlbus = bus:index() }) -- a sine LFO
 		elseif key == 98 then -- KEY B - for buffer synth
 			lfo:free()
-			lfo = Synth:new("lfosaw", { ctrlbus = bus:index() })
+			lfo = Synth:new("lfosaw", { ctrlbus = bus:index() }) -- a saw LFO
 
 		elseif key == 118 then -- KEY V - for moving playbuf out of reverb and delay
 			lfo:free()
 			lfo = Synth:new("lfosaw", { ctrlbus = bus:index() })
 
-		elseif key == 99 then -- KEY C - for moving playbuf back on top w. reverb and delay
-
+		elseif key == 99 then -- KEY C - 
+			sine:set({ freq = math.random(2000) }) -- we hardwire the frequency (not bus anymore)
+			-- (note how and why this is different from key D (we set the arg to the freq, not the bus)
+		elseif key == 120 then -- KEY X - we map the frequency back to the bus
+			sine:map("freq", bus)
 		end
 	end
 end
