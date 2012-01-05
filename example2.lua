@@ -33,11 +33,9 @@ function win:mouse(event, btn, x, y)
 	if ((event == "down") and (btn == "left"))then
 		
 	elseif event == "drag" then
-
 --		lfo:set({ freq = x / 10 })
 --		lfo:set({ mul = y })
 		lfo:set({freq = x / 10, mul = y})
-
 	elseif event == "up" then	
 
 	end

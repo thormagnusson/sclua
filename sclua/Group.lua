@@ -7,13 +7,13 @@ function Group:new(aGroup)
 	local grp = {}
 	setmetatable(grp, Group)
 	grp.name = name
-	grp.args = parseArgsX(args) -- convert the arg table into a string
+	grp.args = funcs.parseArgsX(args) -- convert the arg table into a string
 	if aGroup == nil then
 		target = 1 -- default SC server group 
 	else
 		target = aGroup.nodeID
 	end
-	grp.nodeID = nextGroupID()
+	grp.nodeID = funcs.nextGroupID()
 	s:sendMsg('/g_new', grp.nodeID, 0, target) -- add to head by default
 	return grp
 end

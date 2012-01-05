@@ -1,11 +1,12 @@
 -- Global Functions
 
-bufnum = -1
-nodeID = 999
-groupID = 1
-busIndex = 15
+local funcs = {}
+local bufnum = -1
+local nodeID = 999
+local groupID = 1
+local busIndex = 15
 
-function parseArgsX(args)
+function funcs.parseArgsX(args)
 	local a = {}
 	if args ~= nil then
 		for arg, val in pairs(args) do 
@@ -16,22 +17,24 @@ function parseArgsX(args)
 	return a
 end
 
-function nextBufNum()
+function funcs.nextBufNum()
 	bufnum = bufnum + 1
 	return bufnum
 end
 
-function nextNodeID()
+function funcs.nextNodeID()
 	nodeID = nodeID + 1
 	return nodeID
 end
 
-function nextGroupID()
+function funcs.nextGroupID()
 	groupID = groupID + 1
 	return groupID
 end
 
-function nextBusIndex()
+function funcs.nextBusIndex()
 	busIndex = busIndex + 1
 	return busIndex
 end
+
+return funcs

@@ -1,5 +1,5 @@
 local osc = require("osc")
-local funcs = require("sclua.funcs")
+--local funcs = require("sclua.funcs")
 
 local Server = {}
 Server.__index = Server

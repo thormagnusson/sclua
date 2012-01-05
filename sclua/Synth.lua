@@ -6,22 +6,22 @@ Synth.__index = Synth
 function Synth:new(name, args)
    local snth = {}
    setmetatable(snth, Synth)
-   local nodeID = nextNodeID()
+   local nodeID = funcs.nextNodeID()
    snth.nodeID = nodeID
    snth.name = name
-   snth.args = parseArgsX(args)
+   snth.args = funcs.parseArgsX(args)
    s:sendMsg('/s_new', snth.name, snth.nodeID, 0, 1, unpack(snth.args))
    return snth
 end
 
 function Synth:set(args)
-	local args = parseArgsX(args)
+	local args = funcs.parseArgsX(args)
 	s:sendMsg('/n_set', self.nodeID, unpack(args) )
 end
 
 -- unpacking not working here it seems
 function Synth:setn(controlNameNum, args)
-	local nn = parseArgsX(controlNameNum)
+	local nn = funcs.parseArgsX(controlNameNum)
 	s:sendMsg('/n_setn', self.nodeID, unpack(nn), unpack(args) )
 end
 

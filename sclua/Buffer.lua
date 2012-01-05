@@ -6,7 +6,7 @@ Buffer.__index = Buffer
 function Buffer:new()
    local bufr = {}
    setmetatable(bufr, Buffer)
-   bufr.bufnum = nextBufNum();
+   bufr.bufnum = funcs.nextBufNum();
    return bufr
 end
 

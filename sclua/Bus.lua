@@ -6,7 +6,7 @@ Bus.__index = Bus
 function Bus:new()
    local bs = {}
    setmetatable(bs, Bus)
-   bs.busIndex = nextBusIndex()
+   bs.busIndex = funcs.nextBusIndex()
    return bs
 end
 

@@ -1,3 +1,4 @@
+funcs = require('sclua.funcs')
 Server = require('sclua.Server')
 Buffer = require('sclua.Buffer')
 Group = require('sclua.Group')
