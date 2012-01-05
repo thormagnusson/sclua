@@ -16,7 +16,7 @@ function Server:new(IP, port)
 end
 
 function Server:dumpOSC(mode)
--- 	I think this is buggy on the SC Server
+-- 	I think this is buggy on the SC Server side (maybe not in 3.5)
 --	0 - turn dumping OFF.
 --	1 - print the parsed contents of the message.
 --	2 - print the contents in hexadecimal.

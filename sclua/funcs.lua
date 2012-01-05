@@ -6,7 +6,6 @@ groupID = 1
 busIndex = 15
 
 function parseArgsX(args)
---	print("parsing this:", args)
 	local a = {}
 	if args ~= nil then
 		for arg, val in pairs(args) do 

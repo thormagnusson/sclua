@@ -7,8 +7,8 @@ function Synth:new(name, args)
    local nodeID = nextNodeID()
    snth.nodeID = nodeID
    snth.name = name
-   snth.args = parseArgsX(args) -- convert the arg table into a string
-   s:sendMsg('/s_new', snth.name, snth.nodeID, 0, 1, unpack(snth.args)) -- WORKS!
+   snth.args = parseArgsX(args)
+   s:sendMsg('/s_new', snth.name, snth.nodeID, 0, 1, unpack(snth.args))
    return snth
 end
 
@@ -19,7 +19,7 @@ end
 
 -- unpacking not working here it seems
 function Synth:setn(controlNameNum, args)
-	local nn = parseArgsX(controlNameNum) -- no need to parse a table of indexed elements
+	local nn = parseArgsX(controlNameNum)
 	s:sendMsg('/n_setn', self.nodeID, unpack(nn), unpack(args) )
 end
 
