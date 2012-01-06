@@ -1,8 +1,4 @@
-funcs = require('sclua.funcs')
 Server = require('sclua.Server')
-Buffer = require('sclua.Buffer')
-Group = require('sclua.Group')
-Synth = require('sclua.Synth')
 
 --[[
 This example shows:
@@ -14,6 +10,9 @@ This example shows:
 ]]
 
 s = Server:new()
+
+local Synth, Group, Bus, Buffer = s.Synth, s.Group, s.Bus, s.Buffer
+
 s:freeAll() -- free all synths playing and clear up the server
 --s:notify(1) -- notify the client (not working atm).
 
@@ -72,6 +71,8 @@ function win:key(e, key)
 			bufsynth:below(groox)
 		elseif key == 99 then -- KEY C - for moving playbuf back on top w. reverb and delay
 			bufsynth:above(groop)
+		elseif key == 120 then -- KEY 
+			impulse.freq = math.random(2000)
 		end
 	end
 end

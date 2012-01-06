@@ -1,8 +1,13 @@
 local osc = require("osc")
---local funcs = require("sclua.funcs")
+local funcs = require("sclua.funcs")
 
 local Server = {}
 Server.__index = Server
+
+Server.Synth = require("sclua.Synth")
+Server.Buffer = require("sclua.Buffer")
+Server.Group = require('sclua.Group')
+Server.Bus = require('sclua.Bus')
 
 function Server:new(IP, port)
 	local srv = {}
@@ -26,8 +31,17 @@ function Server:dumpOSC(mode)
 end
 
 function Server:boot()
-	os.execute("/Applications/LuaAV.12.12.11/scsynth -u 57110 -b 1026 -R 0 &") 
+	-- this is not working - I think it is because it searches for synthdefs in 
+	-- the App Support/Extensions folder, not the synthdef folder next to the server
+	--os.execute("/Applications/SuperCollider3.4.4/scsynth -u 57110 -b 1026 -R 0 &") 
+	--os.execute("cd /Applications/SuperCollider3.4.4/ && ./scsynth -u 57110 -R 0 &") -- works
+	os.execute("cd /Applications/LuaAV.12.12.11/ && ./scsynth -u 57110 -R 0 &") -- works
+	oscout:send('/d_loadDir', "/Applications/LuaAV.12.12.11/synthdefs")
+
 end
+
+--os.execute("cd /Applications/SuperCollider/ && ./scsynth -u 57117 -R 0 &")
+
 
 function Server:freeAll()
 	oscout:send('/g_freeAll', 0)

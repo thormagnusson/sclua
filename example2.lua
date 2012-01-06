@@ -1,9 +1,4 @@
 Server = require('sclua.Server')
-Buffer = require('sclua.Buffer')
-Group = require('sclua.Group')
-Bus = require('sclua.Bus')
-Synth = require('sclua.Synth')
-
 
 --[[
 This example shows:
@@ -11,8 +6,10 @@ This example shows:
 ]]
 
 s = Server:new()
+local Synth, Group, Bus, Buffer = s.Synth, s.Group, s.Bus, s.Buffer
+
 s:freeAll() -- free all synths playing and clear up the server
-s:notify(1) -- notify the client (not working atm).
+--s:notify(1) -- notify the client (not working atm).
 
 
 sine = Synth:new("luasine", { freq = 440 })

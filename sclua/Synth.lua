@@ -14,6 +14,10 @@ function Synth:new(name, args)
    return snth
 end
 
+--function Synth_metatable:__newindex(key, value)
+--	self._server:sendMsg('/n_set', self.nodeID, key, value)
+--end
+
 function Synth:set(args)
 	local args = funcs.parseArgsX(args)
 	s:sendMsg('/n_set', self.nodeID, unpack(args) )
