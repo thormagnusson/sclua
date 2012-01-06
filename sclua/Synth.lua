@@ -26,7 +26,12 @@ end
 -- unpacking not working here it seems
 function Synth:setn(controlNameNum, args)
 	local nn = funcs.parseArgsX(controlNameNum)
-	s:sendMsg('/n_setn', self.nodeID, unpack(nn), unpack(args) )
+	local args = funcs.parseArgsX(controlNameNum)
+	for arg, val in pairs(args) do 
+		table.insert(nn, arg)
+		table.insert(nn, val)
+	end
+	s:sendMsg('/n_setn', self.nodeID, unpack(nn))
 end
 
 function Synth:above(aSynth)
