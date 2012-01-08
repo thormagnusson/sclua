@@ -63,8 +63,10 @@ function win:key(e, key)
 			delay:below(mouseSynth)
 		elseif key == 103 then -- KEY G - for grains
 			Synth("luagrain", { freq = math.random(5222), amp = 0.05 }) -- no variable (synth frees itself)
-		elseif key == 98 then -- KEY B - for buffer synth
+		elseif key == 98 then -- KEY B - create buffer synth
 			bufsynth = Synth("luaplaybuf", { amp = 0.9 , loop=1})
+		elseif key == 102 then -- KEY F - free buffer synth
+			bufsynth:free()
 		elseif key == 118 then -- KEY V - for moving playbuf into a new group
 			bufsynth:moveToHead(groox)
 		elseif key == 99 then -- KEY C - for moving playbuf back on top w. reverb and delay

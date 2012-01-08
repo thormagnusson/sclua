@@ -68,7 +68,7 @@ SynthDef(\lfosaw, {arg ctrlbus = 2, freq=4, amp=100;
 
 
 /*
-// this is what example2.lua does
+// this is what example2.lua does (more or less)
 
 b = Bus.control(s, 1); b.set(880);
 c = Bus.control(s, 1);	c.set(1000);
