@@ -1,27 +1,22 @@
-Server = require('sclua.Server')
 
 --[[
 This example shows:
 	- creating and using control busses
 ]]
 
-s = Server:new()
+local sclua = require "sclua.Server"
+local s = sclua.Server()
 local Synth, Group, Bus, Buffer = s.Synth, s.Group, s.Bus, s.Buffer
 
 s:freeAll() -- free all synths playing and clear up the server
---s:notify(1) -- notify the client (not working atm).
 
-
-sine = Synth:new("luasine", { freq = 440 })
-bus = Bus:new()
+sine = Synth("luasine", { freq = 440 })
+bus = Bus()
 bus:set(1000)
---bus:get()
 
 sine:map("freq", bus)
 
-lfo = Synth:new("lfo", { ctrlbus = bus:index() })
-
---sine:map("freq", bus:index())
+lfo = Synth("lfo", { ctrlbus = bus:index() })
 
 local ctx = "sclua test"
 win = Window(ctx, 0, 0, 350, 150)
@@ -45,14 +40,14 @@ function win:key(e, key)
 			lfo:free() -- stop the lfo synth
 			bus:set(math.random(2000)) -- and set a static random frequency
 		elseif key == 103 then -- KEY G - for grains
-			lfo = Synth:new("lfo", { ctrlbus = bus:index() }) -- a sine LFO
+			lfo = Synth("lfo", { ctrlbus = bus:index() }) -- a sine LFO
 		elseif key == 98 then -- KEY B - for buffer synth
 			lfo:free()
-			lfo = Synth:new("lfosaw", { ctrlbus = bus:index() }) -- a saw LFO
+			lfo = Synth("lfosaw", { ctrlbus = bus:index() }) -- a saw LFO
 
 		elseif key == 118 then -- KEY V - for moving playbuf out of reverb and delay
 			lfo:free()
-			lfo = Synth:new("lfosaw", { ctrlbus = bus:index() })
+			lfo = Synth("lfosaw", { ctrlbus = bus:index() })
 
 		elseif key == 99 then -- KEY C - 
 			sine:set({ freq = math.random(2000) }) -- we hardwire the frequency (not bus anymore)

@@ -1,64 +1,110 @@
 local osc = require("osc")
 local funcs = require("sclua.funcs")
+local Synth_metatable = require("sclua.Synth")
+local Buffer_metatable = require("sclua.Buffer")
+local Group_metatable = require('sclua.Group')
+local Bus_metatable = require('sclua.Bus')
 
-local Server = {}
-Server.__index = Server
+local Server_metatable = {}
+Server_metatable.__index = Server_metatable
 
-Server.Synth = require("sclua.Synth")
-Server.Buffer = require("sclua.Buffer")
-Server.Group = require('sclua.Group')
-Server.Bus = require('sclua.Bus')
+function Server(IP, port)
+	local s = setmetatable({
+		IP = IP or '127.0.0.1',
+		port = port or 57110,
+		defaultGroup = { nodeID = 1 } -- assimilate the behaviour of SC-lang
+	}, Server_metatable)
+	s.oscout = osc.Send(s.IP, s.port)
+	-- s.oscin  = osc.Recv(57180) -- I need a two directional OSC port
 
-function Server:new(IP, port)
-	local srv = {}
-	setmetatable(srv, Server)
-	IP = IP or '127.0.0.1'
-	port = port or 57110
-	srv.IP = IP
-	srv.port = port
-	oscout = osc.Send(srv.IP, srv.port)
-	-- oscin  = osc.Recv(57180) -- I need a two directional OSC port
-   return srv
+	s.Synth = function(name, args)
+		local synthTab = setmetatable({
+			type = "synth",
+			server = s,
+			nodeID = nextNodeID(),
+			name = name,
+			args = parseArgsX(args),
+		}, Synth_metatable)
+		s:sendMsg('/s_new', synthTab.name, synthTab.nodeID, 0, 1, unpack(synthTab.args))
+		return synthTab
+	end
+
+	s.Buffer = function(path)
+   		local bufferTab = setmetatable({
+			type = "buffer",
+   			bufnum = nextBufNum(),
+   			server = s
+   		}, Buffer_metatable)
+   		if path ~= nil then -- if user provides a filepath (else s/he might want to allocate an empty buf)
+		   s:sendMsg('/b_allocRead', bufferTab.bufnum, path)
+   		end
+   		return bufferTab
+	end
+
+	s.Bus = function()
+		local busTab = setmetatable({
+			type = "bus",
+			value = nil,
+			busIndex = nextBusIndex(),
+			server = s
+		}, Bus_metatable)
+		return busTab
+	end
+	
+	s.Group = function(aGroup)
+		if aGroup == nil then
+			local target = 1 -- default SC server group 
+		else
+			local target = aGroup.nodeID
+		end
+		local groupTab = setmetatable({
+			type = "group",
+			nodeID = nextGroupID(),
+			server = s
+		}, Group_metatable)
+		s:sendMsg('/g_new', groupTab.nodeID, 0, target) -- add to head by default
+		return groupTab
+	end
+	
+   return s
 end
 
-function Server:dumpOSC(mode)
+function Server_metatable:dumpOSC(mode)
 -- 	I think this is buggy on the SC Server side (maybe not in 3.5)
 --	0 - turn dumping OFF.
 --	1 - print the parsed contents of the message.
 --	2 - print the contents in hexadecimal.
 --	3 - print both the parsed and hexadecimal representations of the contents.	
-	oscout:send('/dumpOSC', mode)
+	print("sending dumposc")
+	self.oscout:send('/dumpOSC', mode)
 end
 
-function Server:boot()
-	-- this is not working - I think it is because it searches for synthdefs in 
-	-- the App Support/Extensions folder, not the synthdef folder next to the server
-	--os.execute("/Applications/SuperCollider3.4.4/scsynth -u 57110 -b 1026 -R 0 &") 
-	--os.execute("cd /Applications/SuperCollider3.4.4/ && ./scsynth -u 57110 -R 0 &") -- works
+function Server_metatable:boot()
+	-- since there is no cmd line arg for loading synth defs for scsynth, there has to be a delay
+	-- between the two lines below. (it works however if you have your synthdefs in a default folder)
 	os.execute("cd /Applications/LuaAV.12.12.11/ && ./scsynth -u 57110 -R 0 &") -- works
-	oscout:send('/d_loadDir', "/Applications/LuaAV.12.12.11/synthdefs")
-
+	self.oscout:send('/d_loadDir', "/Applications/LuaAV.12.12.11/synthdefs")
 end
 
 --os.execute("cd /Applications/SuperCollider/ && ./scsynth -u 57117 -R 0 &")
 
 
-function Server:freeAll()
-	oscout:send('/g_freeAll', 0)
-	oscout:send('/clearSched')
-	oscout:send("/g_new", 1, 0, 0)
+function Server_metatable:freeAll()
+	self.oscout:send('/g_freeAll', 0)
+	self.oscout:send('/clearSched')
+	self.oscout:send("/g_new", 1, 0, 0)
 end
 
-function Server:sendMsg(...)
-	oscout:send(...)
+function Server_metatable:sendMsg(...)
+	self.oscout:send(...)
 end
 
-function Server:notify(arg)
-	oscout:send('/notify', arg)
+function Server_metatable:notify(arg)
+	self.oscout:send('/notify', arg)
 end
 
-function Server:status()
-	oscout:send('/status', arg)
+function Server_metatable:status()
+	self.oscout:send('/status', arg)
 end
 
 --function get_osc()
@@ -75,4 +121,16 @@ end
 --	end
 --end)
 
-return Server
+--return Server
+
+
+-- support garbage collection:
+function Server_metatable:__gc() 
+	self:free() 
+end
+
+-- module:
+return {
+	Server = Server
+}
+

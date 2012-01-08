@@ -1,82 +1,70 @@
 local funcs = require("sclua.funcs")
 
-local Synth = {}
-Synth.__index = Synth
+local Synth_metatable = {}
+Synth_metatable.__index = Synth_metatable
 
-function Synth:new(name, args)
-   local snth = {}
-   setmetatable(snth, Synth)
-   local nodeID = funcs.nextNodeID()
-   snth.nodeID = nodeID
-   snth.name = name
-   snth.args = funcs.parseArgsX(args)
-   s:sendMsg('/s_new', snth.name, snth.nodeID, 0, 1, unpack(snth.args))
-   return snth
+
+function Synth_metatable:__newindex(key, value)
+	self.server:sendMsg('/n_set', self.nodeID, key, value)
 end
 
---function Synth_metatable:__newindex(key, value)
---	self._server:sendMsg('/n_set', self.nodeID, key, value)
---end
-
-function Synth:set(args)
-	local args = funcs.parseArgsX(args)
-	s:sendMsg('/n_set', self.nodeID, unpack(args) )
+function Synth_metatable:set(args)
+	self.server:sendMsg('/n_set', self.nodeID, unpack(parseArgsX(args)) )
 end
 
--- unpacking not working here it seems
-function Synth:setn(controlNameNum, args)
+function Synth_metatable:setn(controlNameNum, args)
 	local nn = funcs.parseArgsX(controlNameNum)
 	local args = funcs.parseArgsX(controlNameNum)
 	for arg, val in pairs(args) do 
 		table.insert(nn, arg)
 		table.insert(nn, val)
 	end
-	s:sendMsg('/n_setn', self.nodeID, unpack(nn))
+	self.server:sendMsg('/n_setn', self.nodeID, unpack(nn))
 end
 
-function Synth:above(aSynth)
-	s:sendMsg('/n_before', self.nodeID, aSynth.nodeID )
+function Synth_metatable:above(aSynth)
+	self.server:sendMsg('/n_before', self.nodeID, aSynth.nodeID )
 end
 
-function Synth:below(aSynth)
-	s:sendMsg('/n_after', self.nodeID, aSynth.nodeID )
+function Synth_metatable:below(aSynth)
+	self.server:sendMsg('/n_after', self.nodeID, aSynth.nodeID )
 end
 
-function Synth:moveToHead(aNode)
-	s:sendMsg('/g_head', aNode.nodeID, self.nodeID )
+function Synth_metatable:moveToHead(aNode)
+	self.server:sendMsg('/g_head', aNode.nodeID, self.nodeID )
 end
 
-function Synth:moveToTail(aNode)
-	s:sendMsg('/g_tail', aNode.nodeID, self.nodeID )
+function Synth_metatable:moveToTail(aNode)
+	self.server:sendMsg('/g_tail', aNode.nodeID, self.nodeID )
 end
 
-function Synth:free()
-	s:sendMsg('/n_free', self.nodeID )
+function Synth_metatable:free()
+	self.server:sendMsg('/n_free', self.nodeID )
 end
 
-function Synth:run(arg)
-	s:sendMsg('/n_run', self.nodeID, arg)
+function Synth_metatable:run(arg)
+	self.server:sendMsg('/n_run', self.nodeID, arg)
 end
 
-function Synth:getNodeID()
+function Synth_metatable:getNodeID()
 	return self.nodeID
 end
 
-function Synth:map(name, aBus)
-	s:sendMsg('/n_map', self.nodeID, name, aBus.busIndex )
+function Synth_metatable:map(name, aBus)
+	self.server:sendMsg('/n_map', self.nodeID, name, aBus.busIndex )
 end
 
--- REVIEW
---function Synth:map(args)
---	s:sendMsg('/n_map', self.nodeID, unpack(args) )
---end
-
-function Synth:mapn(args) -- mapping from control bus
-	s:sendMsg('/n_mapn', self.nodeID, unpack(args) )
+function Synth_metatable:mapn(args) -- mapping from control bus
+	self.server:sendMsg('/n_mapn', self.nodeID, unpack(args) )
 end
 
-function Synth:mapa(args) -- mapping from control bus
-	s:sendMsg('/n_mapa', self.nodeID, unpack(args) )
+function Synth_metatable:mapa(args) -- mapping from control bus
+	self.server:sendMsg('/n_mapa', self.nodeID, unpack(args) )
 end
 
-return Synth
+-- support garbage collection:
+function Synth_metatable:__gc() 
+	self:free() 
+end
+
+return Synth_metatable

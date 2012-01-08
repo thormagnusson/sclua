@@ -1,62 +1,65 @@
 local funcs = require("sclua.funcs")
 
-local Buffer = {}
-Buffer.__index = Buffer
+local Buffer_metatable = {}
+Buffer_metatable.__index = Buffer_metatable
 
-function Buffer:new()
-   local bufr = {}
-   setmetatable(bufr, Buffer)
-   bufr.bufnum = funcs.nextBufNum();
-   return bufr
+
+function Buffer_metatable:alloc(numframes, numchannels)
+   self.server:sendMsg('/b_alloc', self.bufnum, numframes, numchannels)
 end
 
-function Buffer:alloc(numframes, numchannels)
-   s:sendMsg('/b_alloc', self.bufnum, numframes, numchannels)
+function Buffer_metatable:read(path)
+   self.server:sendMsg('/b_allocRead', self.bufnum, path)
 end
 
-function Buffer:read(path)
-   s:sendMsg('/b_allocRead', self.bufnum, path)
+function Buffer_metatable:write(path)
+	self.server:sendMsg('/b_write', self.bufnum, path, "aiff", "int16")
 end
 
-function Buffer:write(path)
-	s:sendMsg('/b_write', self.bufnum, path, "aiff", "int16")
+function Buffer_metatable:free()
+	self.server:sendMsg('/b_free', self.bufnum)
 end
 
-function Buffer:free()
-	s:sendMsg('/b_free', self.bufnum)
+function Buffer_metatable:zero()
+	self.server:sendMsg('/b_zero', self.bufnum)
 end
 
-function Buffer:zero()
-	s:sendMsg('/b_zero', self.bufnum)
+function Buffer_metatable:set(index, value)
+	self.server:sendMsg('/b_set', self.bufnum, index, value)
 end
 
-function Buffer:set(index, value)
-	s:sendMsg('/b_set', self.bufnum, index, value)
+function Buffer_metatable:setn(index, numsamples, value) -- not ready perphas ... instead of value or use unpack
+	self.server:sendMsg('/b_setn', self.bufnum, index, numsamples, value)
 end
 
-function Buffer:setn(index, numsamples, value) -- not ready perphas ... instead of value or use unpack
-	s:sendMsg('/b_setn', self.bufnum, index, numsamples, value)
+function Buffer_metatable:fill(index, numsamples, value)
+	self.server:sendMsg('/b_fill', self.bufnum, index, numsamples, value)
 end
 
-function Buffer:fill(index, numsamples, value)
-	s:sendMsg('/b_fill', self.bufnum, index, numsamples, value)
+function Buffer_metatable:close()
+	self.server:sendMsg('/b_close', self.bufnum)
 end
 
-function Buffer:close()
-	s:sendMsg('/b_close', self.bufnum)
+function Buffer_metatable:query()
+	self.server:sendMsg('/b_query', self.bufnum)
 end
 
-function Buffer:query()
-	s:sendMsg('/b_query', self.bufnum)
+function Buffer_metatable:get(index)
+	self.server:sendMsg('/b_get', self.bufnum, index)
 end
 
-function Buffer:get(index)
-	s:sendMsg('/b_get', self.bufnum, index)
+function Buffer_metatable:getn(index, numsamples)
+	self.server:sendMsg('/b_get', self.bufnum, index, numsamples)
 end
 
-function Buffer:getn(index, numsamples)
-	s:sendMsg('/b_get', self.bufnum, index, numsamples)
+function Buffer_metatable:__gc() 
+	self:free() 
 end
 
-return Buffer
+-- support garbage collection:
+function Buffer_metatable:__gc() 
+	self:free() 
+end
+
+return Buffer_metatable
 

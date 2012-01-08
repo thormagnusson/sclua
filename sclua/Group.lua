@@ -1,56 +1,47 @@
 local funcs = require("sclua.funcs")
 
-local Group = {}
-Group.__index = Group
+local Group_metatable = {}
+Group_metatable.__index = Group_metatable
 
-function Group:new(aGroup)
-	local grp = {}
-	setmetatable(grp, Group)
-	grp.name = name
-	grp.args = funcs.parseArgsX(args) -- convert the arg table into a string
-	if aGroup == nil then
-		target = 1 -- default SC server group 
-	else
-		target = aGroup.nodeID
-	end
-	grp.nodeID = funcs.nextGroupID()
-	s:sendMsg('/g_new', grp.nodeID, 0, target) -- add to head by default
-	return grp
+
+function Group_metatable:moveToHead(aNode)
+	self.server:sendMsg('/g_head', aNode.nodeID, self.nodeID)
 end
 
-function Group:moveToHead(aNode)
-	s:sendMsg('/g_head', aNode.nodeID, self.nodeID)
+function Group_metatable:moveToTail(aNode)
+	self.server:sendMsg('/g_tail', aNode.nodeID, self.nodeID)
 end
 
-function Group:moveToTail(aNode)
-	s:sendMsg('/g_tail', aNode.nodeID, self.nodeID)
+function Group_metatable:above(aGroup)
+	self.server:sendMsg('/n_before', self.nodeID, aGroup.nodeID )
 end
 
-function Group:above(aGroup)
-	s:sendMsg('/n_before', self.nodeID, aGroup.nodeID )
+function Group_metatable:below(aGroup)
+	self.server:sendMsg('/n_after', self.nodeID, aGroup.nodeID )
 end
 
-function Group:below(aGroup)
-	s:sendMsg('/n_after', self.nodeID, aGroup.nodeID )
+function Group_metatable:freeAll()
+	self.server:sendMsg('/g_freeAll', self.nodeID )
 end
 
-function Group:freeAll()
-	s:sendMsg('/g_freeAll', self.nodeID )
+function Group_metatable:deepFree()
+	self.server:sendMsg('/g_deepFree', self.nodeID )
 end
 
-function Group:deepFree()
-	s:sendMsg('/g_deepFree', self.nodeID )
-end
-
-function Group:dumpTree(flag)
+function Group_metatable:dumpTree(flag)
 	flag = flag or 0
-	s:sendMsg('/g_dumpTree', self.nodeID, flag )
+	self.server:sendMsg('/g_dumpTree', self.nodeID, flag )
 end
 
-function Group:queryTree(flag)
+function Group_metatable:queryTree(flag)
 	flag = flag or 0
 	-- Replies to the sender with a /g_queryTree.reply message
-	s:sendMsg('/g_queryTree', self.nodeID, flag )
+	self.server:sendMsg('/g_queryTree', self.nodeID, flag )
 end
 
-return Group
+-- support garbage collection:
+function Group_metatable:__gc() 
+	self:free() 
+end
+
+return Group_metatable
