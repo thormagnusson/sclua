@@ -1,6 +1,6 @@
 
 // A SC patch that shows AND UPDATES the nodes on the server
-// for SC lang 3.4 (this is already implemented in SC 3.5 - if you do: s.nodeTree)
+// for SC lang 3.4 (this is already implemented in SC 3.5 - if you do: s.plotTree)
 
 // Highlight all this code and evaluate it (Shift+Return)
  

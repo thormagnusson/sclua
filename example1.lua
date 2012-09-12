@@ -19,7 +19,7 @@ mybuf = Buffer("/Users/thor/Library/Application Support/SuperCollider/sounds/a11
 
 impulse = Synth("luaimpulse", { freq = 2 })
 impulse2 = Synth("luaimpulse", { freq = 3 })
-default = Synth("default", { freq = 2 })
+default = Synth("sine", { freq = 2 })
 reverb = Synth("luareverb", { freq = 2 })
 delay = Synth("luadelay", { delaytime = 0.4, decaytime = 3 })
 	

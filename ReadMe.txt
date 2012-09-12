@@ -11,7 +11,7 @@ Bus (a control bus on the server)
 Buffer (sound samples read into RAM)
 - there is also a funcs.lua file that provides necessary functions
 
-This does library does not support compiling synthdefs for the server. To do that use SuperCollider language.
+This does library does not support compiling synthdefs for the server. To do that, use SuperCollider language.
 
 Instructions:
 - Start SuperCollider and boot the localhost server
@@ -22,9 +22,6 @@ Instructions:
 
 Issues
 - two directional OSC ports required for server replying to lang
-- is a table a good way to pass arguments? what's the lua way?
-- a way to clear the LuaAV post window on running script?
-
 
 
 for SC users
@@ -32,7 +29,6 @@ for SC users
 
 
 TODO:
-- server global variable ?  s?
 - make the OSC library independent of LuaAV
 
 
